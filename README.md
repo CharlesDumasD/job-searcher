@@ -34,3 +34,23 @@ cp .env.example .env
 ```
 
 Then fill in the required values in `.env`.
+
+## Run
+
+Run one request and exit:
+
+```bash
+uv run python -m job_searcher "Find remote AI healthcare jobs"
+```
+
+Start an interactive conversation:
+
+```bash
+uv run python -m job_searcher
+```
+
+Print tool calls and tool results:
+
+```bash
+uv run python -m job_searcher --debug "Find remote AI healthcare jobs"
+```

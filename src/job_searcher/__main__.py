@@ -1,6 +1,7 @@
 import argparse
+import json
 
-from langchain_core.messages import AIMessage, AnyMessage, HumanMessage
+from langchain_core.messages import AIMessage, AnyMessage, HumanMessage, ToolMessage
 
 from job_searcher.agent.graph import build_graph
 
@@ -12,6 +13,11 @@ def parse_args() -> argparse.Namespace:
         "request",
         nargs="*",
         help="Optional one-shot request. Omit it to start interactive mode.",
+    )
+    parser.add_argument(
+        "--debug",
+        action="store_true",
+        help="Print tool calls and tool results after each agent turn.",
     )
     return parser.parse_args()
 
@@ -32,14 +38,28 @@ def get_last_assistant_text(messages: list[AnyMessage]) -> str:
     return "No assistant response was produced."
 
 
-def run_one_shot(user_text: str) -> None:
+def print_debug_trace(previous_count: int, messages: list[AnyMessage]) -> None:
+    """Print tool calls and results produced during the latest turn."""
+    for message in messages[previous_count:]:
+        if isinstance(message, AIMessage) and message.tool_calls:
+            for tool_call in message.tool_calls:
+                tool_args = json.dumps(tool_call["args"], indent=2)
+                print(f"[tool call] {tool_call['name']}\n{tool_args}")
+        elif isinstance(message, ToolMessage):
+            print(f"[tool result] {message.name}")
+            print(message.content)
+
+
+def run_one_shot(user_text: str, debug: bool) -> None:
     """Run a single request and print the agent response."""
     graph = build_graph()
     messages = run_turn(graph, [], user_text)
+    if debug:
+        print_debug_trace(0, messages)
     print(get_last_assistant_text(messages))
 
 
-def run_interactive() -> None:
+def run_interactive(debug: bool) -> None:
     """Run an interactive in-memory conversation."""
     graph = build_graph()
     messages: list[AnyMessage] = []
@@ -52,7 +72,10 @@ def run_interactive() -> None:
         if not user_text:
             continue
 
+        previous_count = len(messages)
         messages = run_turn(graph, messages, user_text)
+        if debug:
+            print_debug_trace(previous_count, messages)
         print(get_last_assistant_text(messages))
 
 
@@ -61,9 +84,9 @@ def main() -> None:
     args = parse_args()
     user_text = " ".join(args.request).strip()
     if user_text:
-        run_one_shot(user_text)
+        run_one_shot(user_text, args.debug)
     else:
-        run_interactive()
+        run_interactive(args.debug)
 
 
 if __name__ == "__main__":
