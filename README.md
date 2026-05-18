@@ -62,7 +62,7 @@ Then fill in the required values in `.env`.
 Run one request and exit:
 
 ```bash
-uv run python -m job_searcher "Je cherche un job lié à l'IA dans la santé basé à Paris avec une forte dimension technique / data"
+uv run python -m job_searcher "Je cherche un job lié à l'IA dans la santé basé à Paris avec une forte dimension technique / data. Sauvegarde les pistes que tu as trouvé dans un rapport Markdown"
 ```
 
 Start an interactive conversation:
@@ -74,5 +74,5 @@ uv run python -m job_searcher
 Print tool calls and tool results:
 
 ```bash
-uv run python -m job_searcher --debug "Je cherche un job lié à l'IA dans la santé basé à Paris avec une forte dimension technique / data"
+uv run python -m job_searcher --debug "Je cherche un job lié à l'IA dans la santé basé à Paris avec une forte dimension technique / data. Sauvegarde les pistes que tu as trouvé dans un rapport Markdown."
 ```
