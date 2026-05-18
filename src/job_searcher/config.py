@@ -18,6 +18,24 @@ class Settings(BaseSettings):
         default="gpt-4.1-mini",
         description="The OpenAI chat model used by the agent",
     )
+    adzuna_app_id: SecretStr | None = Field(
+        default=None,
+        alias="ADZUNA_APP_ID",
+        description="The Adzuna application ID",
+    )
+    adzuna_app_key: SecretStr | None = Field(
+        default=None,
+        alias="ADZUNA_APP_KEY",
+        description="The Adzuna application key",
+    )
+    adzuna_country: str = Field(
+        default="fr",
+        description="The Adzuna country code used for job searches",
+    )
+    adzuna_results_per_page: int = Field(
+        default=10,
+        description="The default number of Adzuna results to fetch",
+    )
     opik_api_key: SecretStr | None = Field(
         default=None,
         alias="OPIK_API_KEY",

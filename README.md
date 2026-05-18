@@ -4,13 +4,33 @@ Small LangGraph-based agent for finding AI jobs in healthcare, summarizing the r
 
 ## Design
 
-The project is intentionally simple and course-friendly:
+The project is intentionally simple and course-friendly.
 
-- Job search tools fetch structured listings from job APIs
-- Filtering tools keep results relevant to AI and healthcare
-- An LLM summarizes the selected jobs into a readable report
-- Report tools save the output locally
-- Optional observability is planned with Opik
+The agent is a LangGraph ReAct loop:
+
+- The user sends a job-search request
+- The LLM decides which tool to call
+- Tool results are added to the conversation state
+- The LLM either calls another tool or returns a final answer
+
+Implemented tools:
+
+- `search_jobs`: Searches Adzuna with API-native filters such as keywords,
+  location, salary, contract type, recency, and result limit
+
+Planned tools:
+
+- `filter_jobs`: Applies semantic filters that are hard to express in the job
+  API, such as healthcare relevance, AI/ML relevance, seniority, and profile fit
+- `summarize_jobs`: Creates a concise report from selected listings
+- `save_report`: Writes the report to a local markdown file
+- `send_email`: Optionally sends the report by email
+
+Current memory model:
+
+- One-shot CLI runs keep memory only for that request
+- Interactive CLI runs keep conversation state in memory until exit
+- No persistent checkpointing yet
 
 ## Setup
 
