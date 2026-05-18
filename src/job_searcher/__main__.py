@@ -38,34 +38,6 @@ def get_last_assistant_text(messages: list[AnyMessage]) -> str:
     return "No assistant response was produced."
 
 
-def get_display_text(messages: list[AnyMessage]) -> str:
-    """Return the best user-facing text from the latest agent run."""
-    summary = get_latest_tool_content(messages, "summarize_jobs")
-    save_result = get_latest_tool_content(messages, "save_report")
-    if summary is None:
-        return get_last_assistant_text(messages)
-
-    if save_result is None:
-        return summary
-
-    try:
-        path = json.loads(save_result)["path"]
-    except (KeyError, TypeError, json.JSONDecodeError):
-        return summary
-
-    return f"{summary}\n\nReport saved to `{path}`."
-
-
-def get_latest_tool_content(messages: list[AnyMessage], name: str) -> str | None:
-    """Return the latest content from a named tool message."""
-    for message in reversed(messages):
-        if isinstance(message, ToolMessage) and message.name == name:
-            if isinstance(message.content, str):
-                return message.content
-            return str(message.content)
-    return None
-
-
 def print_debug_trace(previous_count: int, messages: list[AnyMessage]) -> None:
     """Print tool calls and results produced during the latest turn."""
     for message in messages[previous_count:]:
@@ -84,7 +56,7 @@ def run_one_shot(user_text: str, debug: bool) -> None:
     messages = run_turn(graph, [], user_text)
     if debug:
         print_debug_trace(0, messages)
-    print(get_display_text(messages))
+    print(get_last_assistant_text(messages))
 
 
 def run_interactive(debug: bool) -> None:
@@ -104,7 +76,7 @@ def run_interactive(debug: bool) -> None:
         messages = run_turn(graph, messages, user_text)
         if debug:
             print_debug_trace(previous_count, messages)
-        print(get_display_text(messages))
+        print(get_last_assistant_text(messages))
 
 
 def main() -> None:

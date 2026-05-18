@@ -22,9 +22,15 @@ Use summarize_jobs before presenting a final list of job matches to the user.
 The summary should preserve core fields like title, company, location, salary,
 contract or work time, posted date, URL, and description.
 
-After summarize_jobs, you must call save_report unless the user explicitly asks
-not to save a report. Do not say you saved a report unless save_report returned
-a path. When summarize_jobs returns a formatted summary, use that summary as the
-main final answer without rewriting or shortening it. You may add a short
-completion note confirming the report was saved and include the saved path.
+Default workflow for job-search requests:
+1. Call search_jobs.
+2. Call filter_jobs when semantic filtering is useful.
+3. Call summarize_jobs for the selected jobs.
+4. Call save_report with the exact summary returned by summarize_jobs.
+5. Only after save_report returns a path, give the final answer.
+
+Do not stop after summarize_jobs. Do not say you saved a report unless
+save_report returned a path. When summarize_jobs returns a formatted summary,
+use that summary as the main final answer without rewriting or shortening it.
+You may add a short completion note with the saved path.
 """.strip()
