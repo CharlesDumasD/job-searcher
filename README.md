@@ -19,10 +19,11 @@ Implemented tools:
   location, salary, contract type, recency, and result limit
 - `filter_jobs`: Applies semantic filters that are hard to express in the job
   API, such as healthcare relevance, AI/ML relevance, seniority, and profile fit
+- `summarize_jobs`: Creates a concise report from selected listings with stable
+  fields such as title, company, location, salary, contract, URL, and description
 
 Planned tools:
 
-- `summarize_jobs`: Creates a concise report from selected listings
 - `save_report`: Writes the report to a local markdown file
 - `send_email`: Optionally sends the report by email
 
