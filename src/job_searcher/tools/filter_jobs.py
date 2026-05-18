@@ -30,7 +30,17 @@ def filter_jobs(
     jobs: list[dict[str, object]],
     criteria: str,
 ) -> list[dict[str, object]]:
-    """Filter job listings semantically while preserving their original format."""
+    """Filter job listings using semantic criteria.
+
+    Use this after search_jobs when the user asks for subjective or fuzzy
+    filtering, such as healthcare relevance, AI/ML relevance, technical fit,
+    seniority, remote fit, profile fit, or excluding jobs that are not actually
+    relevant.
+
+    Pass the original list of job dictionaries and describe the filtering
+    criteria in natural language. This returns the matching jobs in the same
+    format.
+    """
     settings = get_settings()
     model_args: dict[str, object] = {
         "model": settings.openai_model,

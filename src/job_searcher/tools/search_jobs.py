@@ -20,7 +20,16 @@ def search_jobs(
     sort_by: str | None = None,
     limit: int = 10,
 ) -> list[dict[str, object]]:
-    """Search jobs broadly with Adzuna API filters requested by the user."""
+    """Search Adzuna for broad job candidates.
+
+    Use this first to fetch jobs from the external job API. Use broad role or
+    sector keywords, plus API-native filters explicitly requested by the user
+    such as location, salary, contract type, recency, company, and result limit.
+
+    Do not use this tool for subjective filtering such as healthcare relevance,
+    AI/ML relevance, seniority, or profile fit. Use filter_jobs after searching
+    for those criteria.
+    """
     jobs = search_adzuna_jobs(
         settings=get_settings(),
         query=query,
