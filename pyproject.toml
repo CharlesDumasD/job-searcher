@@ -4,7 +4,9 @@ version = "0.1.0"
 description = "LangGraph agent for finding and summarizing AI healthcare jobs."
 readme = "README.md"
 requires-python = ">=3.11"
-dependencies = []
+dependencies = [
+    "pydantic-settings>=2.0.0",
+]
 
 [dependency-groups]
 dev = [
