@@ -23,10 +23,6 @@ Implemented tools:
   fields such as title, company, location, salary, contract, URL, and description
 - `save_report`: Writes the formatted report to a local markdown file
 
-Planned tools:
-
-- `send_email`: Optionally sends the report by email
-
 Current memory model:
 
 - One-shot CLI runs keep memory only for that request
