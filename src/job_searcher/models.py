@@ -10,3 +10,7 @@ class JobListing(BaseModel):
     description: str | None = None
     url: HttpUrl | None = None
     source: str | None = None
+    salary_min: int | None = None
+    salary_max: int | None = None
+    remote: bool | None = None
+    posted_at: str | None = None

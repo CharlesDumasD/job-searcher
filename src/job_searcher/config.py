@@ -14,6 +14,10 @@ class Settings(BaseSettings):
         alias="OPENAI_API_KEY",
         description="The API key for the OpenAI API",
     )
+    openai_model: str = Field(
+        default="gpt-4.1-mini",
+        description="The OpenAI chat model used by the agent",
+    )
     opik_api_key: SecretStr | None = Field(
         default=None,
         alias="OPIK_API_KEY",
