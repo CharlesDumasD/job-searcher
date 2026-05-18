@@ -18,9 +18,9 @@ def search_jobs(
     contract: bool | None = None,
     max_days_old: int | None = None,
     sort_by: str | None = None,
-    limit: int = 5,
+    limit: int = 10,
 ) -> list[dict[str, object]]:
-    """Search jobs with Adzuna API filters explicitly requested by the user."""
+    """Search jobs broadly with Adzuna API filters requested by the user."""
     jobs = search_adzuna_jobs(
         settings=get_settings(),
         query=query,

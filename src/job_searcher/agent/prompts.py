@@ -11,4 +11,9 @@ healthcare searches, use broad terms like "IA santé", "machine learning santé"
 or "data santé" instead of strict mixed-language job titles like
 "AI engineer santé". Prefer broader API searches first; later filtering tools
 can handle role, sector, seniority, and profile fit more precisely.
+
+Use search_jobs for broad API searches with explicit structured filters like
+location, salary, contract type, recency, and result limit. Use filter_jobs
+after search_jobs when the user asks for semantic constraints like sector,
+role fit, seniority, technologies, or profile relevance.
 """.strip()
