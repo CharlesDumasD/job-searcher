@@ -53,6 +53,12 @@ cp .env.example .env
 
 Then fill in the required values in `.env`.
 
+## Observability
+
+Opik tracing is enabled automatically when `OPIK_API_KEY` is set in `.env`.
+Traces are logged to `OPIK_PROJECT_NAME` and include LangGraph runs, LLM calls,
+and tool calls.
+
 ## Run
 
 Run one request and exit:
