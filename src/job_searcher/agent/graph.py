@@ -7,10 +7,11 @@ from job_searcher.agent.prompts import SYSTEM_PROMPT
 from job_searcher.agent.state import AgentState
 from job_searcher.config import Settings, get_settings
 from job_searcher.tools.filter_jobs import filter_jobs
+from job_searcher.tools.save_report import save_report
 from job_searcher.tools.search_jobs import search_jobs
 from job_searcher.tools.summarize_jobs import summarize_jobs
 
-TOOLS = [search_jobs, filter_jobs, summarize_jobs]
+TOOLS = [search_jobs, filter_jobs, summarize_jobs, save_report]
 
 
 def build_graph(settings: Settings | None = None):

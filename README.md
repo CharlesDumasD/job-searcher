@@ -21,10 +21,10 @@ Implemented tools:
   API, such as healthcare relevance, AI/ML relevance, seniority, and profile fit
 - `summarize_jobs`: Creates a concise report from selected listings with stable
   fields such as title, company, location, salary, contract, URL, and description
+- `save_report`: Writes the formatted report to a local markdown file
 
 Planned tools:
 
-- `save_report`: Writes the report to a local markdown file
 - `send_email`: Optionally sends the report by email
 
 Current memory model:
