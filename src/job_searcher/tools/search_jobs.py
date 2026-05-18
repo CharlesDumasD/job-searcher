@@ -1,4 +1,9 @@
+import json
+
+from langchain_core.messages import ToolMessage
 from langchain_core.tools import tool
+from langgraph.prebuilt import ToolRuntime
+from langgraph.types import Command
 
 from job_searcher.config import get_settings
 from job_searcher.services.adzuna import search_adzuna_jobs
@@ -6,6 +11,7 @@ from job_searcher.services.adzuna import search_adzuna_jobs
 
 @tool
 def search_jobs(
+    runtime: ToolRuntime,
     query: str,
     location: str | None = None,
     excluded_keywords: str | None = None,
@@ -19,7 +25,7 @@ def search_jobs(
     max_days_old: int | None = None,
     sort_by: str | None = None,
     limit: int = 10,
-) -> list[dict[str, object]]:
+) -> Command:
     """Search Adzuna for broad job candidates.
 
     Use this first to fetch jobs from the external job API. Use broad role or
@@ -46,4 +52,17 @@ def search_jobs(
         sort_by=sort_by,
         limit=limit,
     )
-    return [job.model_dump(mode="json") for job in jobs]
+    job_dicts = [job.model_dump(mode="json") for job in jobs]
+    content = json.dumps(job_dicts, ensure_ascii=False)
+    return Command(
+        update={
+            "jobs": job_dicts,
+            "messages": [
+                ToolMessage(
+                    content=content,
+                    name="search_jobs",
+                    tool_call_id=runtime.tool_call_id,
+                )
+            ],
+        }
+    )

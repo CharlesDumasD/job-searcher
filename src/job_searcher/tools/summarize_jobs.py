@@ -1,8 +1,10 @@
 import json
 
-from langchain_core.messages import HumanMessage, SystemMessage
+from langchain_core.messages import HumanMessage, SystemMessage, ToolMessage
 from langchain_core.tools import tool
 from langchain_openai import ChatOpenAI
+from langgraph.prebuilt import ToolRuntime
+from langgraph.types import Command
 
 from job_searcher.config import get_settings
 
@@ -30,15 +32,31 @@ Do not invent missing salary, contract, remote status, or job details. Use
 
 @tool
 def summarize_jobs(
-    jobs: list[dict[str, object]],
+    runtime: ToolRuntime,
     user_request: str,
-) -> str:
+) -> Command:
     """Summarize selected jobs in a stable format for the user.
 
     Use this after search_jobs and optional filter_jobs when presenting job
     matches. Preserve factual fields from the job listings, always include
-    salary when available, and do not invent missing job details.
+    salary when available, and do not invent missing job details. The tool reads
+    the latest jobs from graph state and stores the summary back in state.
     """
+    jobs = runtime.state.get("jobs", [])
+    if not jobs:
+        content = "No jobs are available in state. Call search_jobs first."
+        return Command(
+            update={
+                "messages": [
+                    ToolMessage(
+                        content=content,
+                        name="summarize_jobs",
+                        tool_call_id=runtime.tool_call_id,
+                    )
+                ]
+            }
+        )
+
     settings = get_settings()
     model_args: dict[str, object] = {
         "model": settings.openai_model,
@@ -61,5 +79,19 @@ def summarize_jobs(
     )
 
     if isinstance(response.content, str):
-        return response.content
-    return str(response.content)
+        summary = response.content
+    else:
+        summary = str(response.content)
+
+    return Command(
+        update={
+            "summary": summary,
+            "messages": [
+                ToolMessage(
+                    content=summary,
+                    name="summarize_jobs",
+                    tool_call_id=runtime.tool_call_id,
+                )
+            ],
+        }
+    )

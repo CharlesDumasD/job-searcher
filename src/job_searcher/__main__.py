@@ -4,6 +4,7 @@ import json
 from langchain_core.messages import AIMessage, AnyMessage, HumanMessage, ToolMessage
 
 from job_searcher.agent.graph import build_graph
+from job_searcher.agent.state import AgentState
 
 
 def parse_args() -> argparse.Namespace:
@@ -22,10 +23,14 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def run_turn(graph, messages: list[AnyMessage], user_text: str) -> list[AnyMessage]:
-    """Run one agent turn and return the updated conversation messages."""
-    state = graph.invoke({"messages": [*messages, HumanMessage(content=user_text)]})
-    return state["messages"]
+def run_turn(graph, state: AgentState, user_text: str) -> AgentState:
+    """Run one agent turn and return the updated state."""
+    return graph.invoke(
+        {
+            **state,
+            "messages": [*state["messages"], HumanMessage(content=user_text)],
+        }
+    )
 
 
 def get_last_assistant_text(messages: list[AnyMessage]) -> str:
@@ -53,16 +58,16 @@ def print_debug_trace(previous_count: int, messages: list[AnyMessage]) -> None:
 def run_one_shot(user_text: str, debug: bool) -> None:
     """Run a single request and print the agent response."""
     graph = build_graph()
-    messages = run_turn(graph, [], user_text)
+    state = run_turn(graph, {"messages": []}, user_text)
     if debug:
-        print_debug_trace(0, messages)
-    print(get_last_assistant_text(messages))
+        print_debug_trace(0, state["messages"])
+    print(get_last_assistant_text(state["messages"]))
 
 
 def run_interactive(debug: bool) -> None:
     """Run an interactive in-memory conversation."""
     graph = build_graph()
-    messages: list[AnyMessage] = []
+    state: AgentState = {"messages": []}
 
     print("Job Searcher. Type 'exit' or 'quit' to stop.")
     while True:
@@ -72,11 +77,11 @@ def run_interactive(debug: bool) -> None:
         if not user_text:
             continue
 
-        previous_count = len(messages)
-        messages = run_turn(graph, messages, user_text)
+        previous_count = len(state["messages"])
+        state = run_turn(graph, state, user_text)
         if debug:
-            print_debug_trace(previous_count, messages)
-        print(get_last_assistant_text(messages))
+            print_debug_trace(previous_count, state["messages"])
+        print(get_last_assistant_text(state["messages"]))
 
 
 def main() -> None:

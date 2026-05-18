@@ -31,6 +31,7 @@ Current memory model:
 
 - One-shot CLI runs keep memory only for that request
 - Interactive CLI runs keep conversation state in memory until exit
+- Intermediate jobs, summaries, and report paths are stored in LangGraph state
 - No persistent checkpointing yet
 
 ## Setup
