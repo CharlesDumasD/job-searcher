@@ -27,9 +27,9 @@ class FilterDecision(BaseModel):
 
 @tool
 def filter_jobs(
-    jobs: list[dict[str, object]],
     criteria: str,
-) -> list[dict[str, object]]:
+    jobs: list[dict[str, object]] | None = None,
+) -> list[dict[str, object]] | str:
     """Filter job listings using semantic criteria.
 
     Use this after search_jobs when the user asks for subjective or fuzzy
@@ -41,6 +41,12 @@ def filter_jobs(
     criteria in natural language. This returns the matching jobs in the same
     format.
     """
+    if jobs is None:
+        return (
+            "No jobs were provided. Call filter_jobs again with the jobs list "
+            "returned by search_jobs."
+        )
+
     settings = get_settings()
     model_args: dict[str, object] = {
         "model": settings.openai_model,

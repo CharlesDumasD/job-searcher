@@ -15,7 +15,8 @@ can handle role, sector, seniority, and profile fit more precisely.
 Use search_jobs for broad API searches with explicit structured filters like
 location, salary, contract type, recency, and result limit. Use filter_jobs
 after search_jobs when the user asks for semantic constraints like sector,
-role fit, seniority, technologies, or profile relevance.
+role fit, seniority, technologies, or profile relevance. When calling
+filter_jobs, always pass the full jobs list returned by search_jobs.
 
 Use summarize_jobs before presenting a final list of job matches to the user.
 The summary should preserve core fields like title, company, location, salary,
